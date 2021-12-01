@@ -5,19 +5,7 @@ In a previous study we use inpainting and NCA to synthetize lung nodules (https:
 This work is based on the NCA developed by _**Mordvintsev A.**, et al., "Growing Neural Cellular Automata", Distill, 2020._
 
 ## Create healthy background
-<!-- <img src="/github_images/texture_lung2.png" width="100" height="100">
-<img src="github_images/mask_lung.png" width="100" height="100"> -->
-<div class="image123">
-    <div class="imgContainer">
-        <img src="/github_images/texture_lung2.png" height="200" width="200"/>
-        <p>This is image 1</p>
-    </div>
-    <div class="imgContainer">
-        <img class="middle-img" src="/github_images/mask_lung.png"/ height="200" width="200"/>
-        <p>This is image 2</p>
-    </div>
-</div>
-<!-- ![texture_lung2](/github_images/texture_lung2.png?raw=true) ![mask_lung](/github_images/mask_lung.png?raw=true) -->
+![texture_and_mask_lung](/github_images/texture_and_mask_lung.png?raw=true) 
 First we need to collect images of healthy lung tissue (without lung nodules or covid lesions):   
 1. We use the script texture_mosaic.py to select the largest rectangle from an area inside the lungs that does not contain any lesion.   
 1. Then we use a bin packing algorithm to create a mosaic of all these  rectangles.   

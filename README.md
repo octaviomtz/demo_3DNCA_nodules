@@ -13,7 +13,7 @@ This work is based on the NCA developed by _**Mordvintsev A.**, et al., "Growing
         <p>This is image 1</p>
     </div>
     <div class="imgContainer">
-        <img class="middle-img" src="/github_images/mask_lung.png" height="200" width="200"/>
+        <img class="middle-img" src="/github_images/mask_lung.png"/ height="200" width="200"/>
         <p>This is image 2</p>
     </div>
 </div>

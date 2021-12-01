@@ -1,0 +1,6 @@
+data_folder: '/scans'
+SCAN_NAME: 'volume-covid19-A-0014'
+bin_size: 350
+bin_size_les: 256
+save_results_locally: True
+n_scans: 1

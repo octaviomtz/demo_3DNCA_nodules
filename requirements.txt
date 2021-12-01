@@ -1,0 +1,15 @@
+scipy==1.4.1
+imageio==2.4.1
+numpy==1.19.5
+matplotlib==3.2.2
+omegaconf==2.1.0
+hydra_core==1.1.0
+tqdm==4.41.1
+hydra==2.5
+ipython==7.26.0
+pathlib==1.0.1
+tox==3.24.3
+monai==0.6.0
+scikit_image==0.18.2
+rectpack==0.2.1
+nibabel

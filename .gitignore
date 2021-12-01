@@ -1,0 +1,9 @@
+data/*_.npy
+outputs/
+train_logA/
+how_nodules_were_selected.txt
+get_nodules_that_completed_training.py
+lesion_sample*.npy
+*INTER*
+__pycache__
+videos/

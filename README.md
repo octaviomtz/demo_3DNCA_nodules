@@ -14,6 +14,9 @@ python texture_mosaic.py data_folder='path_to_lung_dataset' SCAN_NAME='all' n_sc
 python texture_mosaic.py #to only go through one scan (won't produce enough rectangles)
 ```
 1. The previous step will produce a mask that can be used to inpaint the boundaries of the rectangles and the gaps between them.   
+1. Apply inpainting with deep image prior (misc/inpainting.ipynb) to the mosaic using its mask.  
+
+## Generate synthetic texture
 
 ## Train 3D NCA
 1. Use the train_synthesis.py to train a 3D NCA to generate a nodule 

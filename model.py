@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Conv3D
 import numpy as np
-from utils_nca import get_living_mask
+from utils.utils_nca import get_living_mask
 
 class CAModel3D(tf.keras.Model):
 

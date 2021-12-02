@@ -69,16 +69,16 @@ nodule_growing = []
 GROW_ITER = 100
 CHANNEL_N = 16
 path_video = f'videos/nodule_0.mp4'
-x = np.zeros([1, 32, 32, 32, CHANNEL_N], np.float32)
-# x = np.zeros([1, 40, 40, 40, CHANNEL_N], np.float32)
-x[..., 16, 16, 16, 1:] = 1.0
-# x[..., 20, 20, 20, 1:] = 1.0
+# x = np.zeros([1, 32, 32, 32, CHANNEL_N], np.float32)
+x = np.zeros([1, 40, 40, 40, CHANNEL_N], np.float32)
+# x[..., 16, 16, 16, 1:] = 1.0
+x[..., 20, 20, 20, 1:] = 1.0
 with VideoWriter(path_video) as vid:
     for i in trange(GROW_ITER):
         for ca, xk in zip([ca], x):
             temp = ca(xk[None,...])[0]
             xk[:] = temp
-            vid.add(temp.numpy()[16,...,0])
+            vid.add(temp.numpy()[20,...,0])
             nodule_growing.append(temp.numpy()[...,0])
 nodule_growing = np.stack(nodule_growing, axis=0)
 
@@ -97,9 +97,9 @@ ax[1].imshow(text, vmin=0, vmax=1)
 #%%
 GEN = 70
 ndl_orig_exp = np.pad(nodules[model_idx][16], ((4,4),(4,4)))
-# ndl_orig_exp = nodules[model_idx][21]
-lesion_exp = np.pad(nodule_growing[GEN,16,...], ((4,4),(4,4)))
-# lesion_exp = nodule_growing[GEN,20,...]
+# ndl_orig_exp = nodules[model_idx][16]
+# lesion_exp = np.pad(nodule_growing[GEN,16,...], ((4,4),(4,4)))
+lesion_exp = nodule_growing[GEN,20,...]
 blend_inpain, blend, mask_lesion_exp, mask_lesion_eroded, mask_inpaint = blend_texture_and_synthetic_nodule(lesion_exp, text)
 
 #%%
@@ -113,10 +113,11 @@ for idx, i in enumerate([ndl_orig_exp, lesion_exp, mask_lesion_exp, mask_lesion_
 fig.tight_layout()
 
 #%%
-ndl_orig_exp = np.pad(nodules[model_idx][16], ((4,4),(4,4)))
+# ndl_orig_exp = np.pad(nodules[model_idx][20], ((4,4),(4,4)))
 ndls_generated = []
 for GEN in np.arange(20,50):
-    lesion_exp = np.pad(nodule_growing[GEN,16,...], ((4,4),(4,4)))
+    lesion_exp = nodule_growing[GEN,20,...]
+    # lesion_exp = np.pad(nodule_growing[GEN,20,...], ((4,4),(4,4)))
     blend_inpain, blend, mask_lesion_exp, mask_lesion_eroded, mask_inpaint = blend_texture_and_synthetic_nodule(lesion_exp, text)
     ndls_generated.append(blend_inpain)
 

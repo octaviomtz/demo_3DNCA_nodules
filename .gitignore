@@ -7,3 +7,5 @@ lesion_sample*.npy
 *INTER*
 __pycache__
 videos/
+*.ipynb
+ngrok*

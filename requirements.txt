@@ -9,7 +9,7 @@ hydra==2.5
 ipython==7.26.0
 pathlib==1.0.1
 tox==3.24.3
-monai==0.6.0
+# monai==0.6.0
 scikit_image==0.18.2
 rectpack==0.2.1
 nibabel

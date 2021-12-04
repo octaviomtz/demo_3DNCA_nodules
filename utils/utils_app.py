@@ -2,6 +2,8 @@ import numpy as np
 import os
 from tqdm import tqdm, trange
 import matplotlib.pylab as plt
+import streamlit as st
+
 from moviepy.video.io.ffmpeg_writer import FFMPEG_VideoWriter
 from utils.utils_nca import VideoWriter
 
@@ -25,7 +27,7 @@ def match_models_and_nodules(path_models):
     dict_match = dict(zip_iterator)
     return dict_match, match_nodule
 
-def grow_nodule(ca, GROW_ITER = 100):
+def grow_nodule(ca, my_bar, GROW_ITER = 100):
     nodule_growing = []
     
     CHANNEL_N = 16
@@ -34,6 +36,7 @@ def grow_nodule(ca, GROW_ITER = 100):
     x[..., 20, 20, 20, 1:] = 1.0
     with VideoWriter(path_video) as vid:
         for i in trange(GROW_ITER):
+            my_bar.progress(i + 1)
             for ca, xk in zip([ca], x):
                 temp = ca(xk[None,...])[0]
                 xk[:] = temp
@@ -43,14 +46,15 @@ def grow_nodule(ca, GROW_ITER = 100):
     return nodule_growing
 
 #%% LOAD SYNTHETIC TEXTURE
-def load_texture(path_texture = 'data/texture_lung_synthetic_ep4k.npy', y_start = 44, x_start = 30):
+def load_texture(y_start = 44, x_start = 30, path_texture = 'data/texture_lung_synthetic_ep4k.npy'):
     texture = np.load(path_texture)
     texture = [i+np.abs(np.min(i)) for i in texture]
     tt = 40
     text = texture[0][y_start:y_start+tt,x_start:x_start+tt]
     
-    plt.figure(figsize=(3,3))
+    plt.figure(figsize=(2,2))
     plt.imshow(text, vmin=0, vmax=1)
+    plt.axis('off')
     plt.savefig('results/texture_mini.png')
     return text
 

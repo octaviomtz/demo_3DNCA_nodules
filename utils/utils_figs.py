@@ -54,3 +54,19 @@ def blend_texture_and_synthetic_nodule(lesion_exp, text, THRESH0 = 0.04, THRESH1
     blend = lesion_exp * mask_lesion_exp + text * (1 - mask_lesion_exp)
     blend_inpain = inpaint.inpaint_biharmonic(blend, mask_inpaint)
     return blend_inpain, blend, mask_lesion_exp, mask_lesion_eroded, mask_inpaint
+
+def create_list_with_blended_nodules(nodule_growing):  
+    ndls_generated = []
+    for GEN in np.arange(20,50):
+      lesion_exp = nodule_growing[GEN,20,...]
+      blend_inpain, blend, mask_lesion_exp, mask_lesion_eroded, mask_inpaint = blend_texture_and_synthetic_nodule(lesion_exp, text)
+      ndls_generated.append(blend_inpain)
+    return ndls_generated
+
+def fig_list_with_blended_nodules(ndls_generated):
+    fig, ax = plt.subplots(5,6, figsize=(16,12))
+    for idx, i in enumerate(ndls_generated):
+        ax.flat[idx].imshow(i)
+        ax.flat[idx].axis('off')
+    fig.tight_layout()
+    plt.savefig('results/nodule_growing.png')

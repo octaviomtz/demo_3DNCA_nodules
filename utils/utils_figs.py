@@ -57,10 +57,10 @@ def blend_texture_and_synthetic_nodule(lesion_exp, text, THRESH0 = 0.04, THRESH1
     blend_inpain = inpaint.inpaint_biharmonic(blend, mask_inpaint)
     return blend_inpain, blend, mask_lesion_exp, mask_lesion_eroded, mask_inpaint
 
-def create_list_with_blended_nodules(nodule_growing, text):  
+def create_list_with_blended_nodules(nodule_growing, text, GROW_ITER = 100):  
     ndls_generated = []
     gens = []
-    for GEN in np.arange(0,40):
+    for GEN in np.arange(0, GROW_ITER):
       lesion_exp = nodule_growing[GEN,20,...]
       blend_inpain, blend, mask_lesion_exp, mask_lesion_eroded, mask_inpaint = blend_texture_and_synthetic_nodule(lesion_exp, text)
       ndls_generated.append(blend_inpain)
@@ -75,19 +75,22 @@ def fig_list_with_blended_nodules(ndls_generated):
     fig.tight_layout()
     plt.savefig('results/nodule_growing.png')
 
-def fig_for_gif(ndls_generated, gens, path_imgs_for_gif='results/imgs_for_gif/img_temp.png', path_gif='results/nodule_growing.gif'):
+def fig_for_gif(ndls_generated, gens, bar_gif, path_imgs_for_gif='results/imgs_for_gif/img_temp.png', path_gif='results/nodule_growing.gif'):
     images = []
+    step = 1 / len(ndls_generated)
     for idx, (i, gen) in enumerate(zip(ndls_generated, gens)):
-        fig, ax = plt.subplots(1,2, gridspec_kw={'width_ratios': [30, 1]}, figsize=(8,8));
-        # plt.figure(figsize=(4,4))
+        bar_gif.progress((idx+1) * step)
+        fig, ax = plt.subplots(1,2, gridspec_kw={'width_ratios': [30, 1]}, figsize=(4,4));
         ax[0].imshow(i, vmin=0, vmax=1)
         ax[0].text(4,4,gen, color='r')
         ax[0].axis('off')
         ax[1].vlines(x=0, ymin=0, ymax=gens[-1], color='k');
         ax[1].scatter(0,gen, c='k', s=gens[-1]);
         ax[1].set_ylim([0,gens[-1]]);
-        ax[1].text(0,0, 0, fontsize=20, c='k')
-        ax[1].text(0,gens[-1]-5, gens[-1], fontsize=20, c='k')
+        ax[1].text(0,0, 1, fontsize=12, c='k')
+        ax[1].text(0,gens[-1]-5, gens[-1]+1, fontsize=12, c='k')
+        ax[1].axis('off')
+        fig.tight_layout();
         plt.savefig(path_imgs_for_gif)
         images.append(imageio.imread(path_imgs_for_gif));
         plt.close()

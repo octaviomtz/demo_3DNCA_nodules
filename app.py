@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import warnings
 
 from model import CAModel3D
-from utils.utils_figs import create_list_with_blended_nodules, fig_list_with_blended_nodules
+from utils.utils_figs import create_list_with_blended_nodules, fig_list_with_blended_nodules, fig_for_gif
 from utils.utils_app import match_models_and_nodules, grow_nodule, load_texture
 
 # warnings.filterwarnings('ignore')
@@ -26,11 +26,10 @@ st.image('github_images/nodules_with_trained_model.png', use_column_width=True)
 IDX = st.slider(key='NODULE', label="Pick a nodule", min_value=0, max_value=49, step=1, value = 21)
 col00, col01, col02 = st.columns((1, 1, 1))
 
-
 synthetic_texture = col00.button('Change synthetic texture ')
 apply_model = col00.button('Grow Nodule')
 nodule = nodules[match_nodule[IDX]]
-st.text_area('text', IDX, match_nodule[IDX])
+
 model_chosen = dict_match[IDX].split(".index")[0]
 print(model_chosen)
 
@@ -39,27 +38,34 @@ plt.imshow(np.squeeze(nodule[15]), vmin=0, vmax=1)
 plt.axis('off')
 plt.savefig('results/nodule_chosen.png')
 col01.image('results/nodule_chosen.png')
+st.session_state['test']=1
+if 'change_synthetic' not in st.session_state:
+    col02.image('results/texture_mini.png') 
 
+# text_box = st.empty()
+# text_box.text_area('text', IDX, match_nodule[IDX])
 my_bar = col00.progress(0)
 
 if synthetic_texture:
-    change_synthetic = 1
+    col02.empty()
+    st.session_state['change_synthetic'] = 1
     y_rand = np.random.randint(0, 80)
     x_rand = np.random.randint(0, 80)
     texture = load_texture(y_start = y_rand, x_start = x_rand)
     st.session_state['texture'] = texture
+    
     col02.image('results/texture_mini.png')
 
 if apply_model:
+    # text_box.text_area(model_chosen)
     ca = CAModel3D()
     ca.load_weights(f'{path_models}/{model_chosen}')
     nodule_growing = grow_nodule(ca, my_bar, GROW_ITER = 100)
 
-    ndls_generated = create_list_with_blended_nodules(nodule_growing, st.session_state['texture'])
-    fig_list_with_blended_nodules(ndls_generated)
-    print('apply model')
-    
-
-    st.image('results/nodule_growing.png')
+    ndls_generated, gens = create_list_with_blended_nodules(nodule_growing, st.session_state['texture'])
+    # fig_list_with_blended_nodules(ndls_generated)
+    # st.image('results/nodule_growing.png')    
+    fig_for_gif(ndls_generated, gens)
+    st.image('results/nodule_growing.gif')
 # st.sidebar.markdown("### Background")
 # st.sidebar.markdown("Select nodule to recreate its emergence and growing.")

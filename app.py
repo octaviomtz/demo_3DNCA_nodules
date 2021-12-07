@@ -36,7 +36,7 @@ print(model_chosen)
 plt.figure(figsize=(2,2))
 plt.imshow(np.squeeze(nodule[15]), vmin=0, vmax=1)
 plt.axis('off')
-plt.savefig('results/nodule_chosen.png')
+plt.savefig('results/nodule_chosen.png') 
 col01.image('results/nodule_chosen.png')
 st.session_state['test']=1
 if 'change_synthetic' not in st.session_state: 
@@ -61,8 +61,10 @@ if apply_model:
     ca = CAModel3D()
     ca.load_weights(f'{path_models}/{model_chosen}')
     nodule_growing = grow_nodule(ca, my_bar, GROW_ITER = 100)
-    # text_box.text_area(f'{len(nodule_growing)}')
-    ndls_generated, gens = create_list_with_blended_nodules(nodule_growing, st.session_state['texture'])
+    pad=4
+    nodule_padded = np.pad(np.squeeze(nodule),((pad,pad),(pad,pad),(pad,pad)))
+    # text_box.text_area(f'{len(nodule_growing), np.shape(nodule_growing), np.shape(nodule_padded), np.min(nodule_padded), np.max(nodule_padded)}')
+    ndls_generated, gens = create_list_with_blended_nodules(nodule_growing, st.session_state['texture'], nodule_padded)
     # fig_list_with_blended_nodules(ndls_generated)
     # st.image('results/nodule_growing.png')    
     fig_for_gif(ndls_generated, gens, bar_gif)

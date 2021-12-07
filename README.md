@@ -4,6 +4,9 @@
 In a previous study we use inpainting and NCA to synthetize lung nodules (https://ieeexplore.ieee.org/document/9433893). Here, we generate the healthy tissue on the background as an alternative approach.   
 This work is based on the NCA developed by _**Mordvintsev A.**, et al., "Growing Neural Cellular Automata", Distill, 2020._
 
+## API demo
+![api_demo](/github_images/gif_nodule_synthesis_api.gif?raw=true)
+
 ## Create healthy background
 ![texture_and_mask_lung](/github_images/texture_and_mask_lung.png?raw=true) 
 First we need to collect images of healthy lung tissue (without lung nodules or covid lesions):   

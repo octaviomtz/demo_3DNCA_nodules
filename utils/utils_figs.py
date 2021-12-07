@@ -48,21 +48,25 @@ def print_3d_horiz(dx):
                   else: print(f'{dx[j][i][k]:+d}',end = ' ')
       print()
 
-def blend_texture_and_synthetic_nodule(lesion_exp, text, THRESH0 = 0.04, THRESH1 = 0.025):
+def blend_texture_and_synthetic_nodule(lesion_exp, text, nodule, THRESH0 = 0.04, THRESH1 = 0.025):
     mask_lesion_exp = lesion_exp > THRESH0
     blend = lesion_exp * mask_lesion_exp + text * (1 - mask_lesion_exp)
     mask_lesion_eroded = (mask_lesion_exp).astype(int) - (binary_erosion(mask_lesion_exp) ).astype(int)
     mask_inpaint = (lesion_exp < THRESH1) *(lesion_exp>0)
-    blend = lesion_exp * mask_lesion_exp + text * (1 - mask_lesion_exp)
+    mask_orig = (nodule[20,...]>0).astype(int)
+    mask_orig_and_lesion = mask_orig * (mask_lesion_exp).astype(int)
+    blend = lesion_exp * mask_orig_and_lesion + text * (1 - mask_orig_and_lesion)
+    print(f'nodule = {nodule.shape}, mask_lesion_exp = {mask_lesion_exp.shape}, lesion_exp = {lesion_exp.shape}, text = {text.shape}')
+    # blend = lesion_exp * mask_lesion_exp + text * (1 - mask_lesion_exp)
     blend_inpain = inpaint.inpaint_biharmonic(blend, mask_inpaint)
     return blend_inpain, blend, mask_lesion_exp, mask_lesion_eroded, mask_inpaint
 
-def create_list_with_blended_nodules(nodule_growing, text, GROW_ITER = 100):  
+def create_list_with_blended_nodules(nodule_growing, text, nodule, GROW_ITER = 100):  
     ndls_generated = []
     gens = []
     for GEN in np.arange(0, GROW_ITER):
       lesion_exp = nodule_growing[GEN,20,...]
-      blend_inpain, blend, mask_lesion_exp, mask_lesion_eroded, mask_inpaint = blend_texture_and_synthetic_nodule(lesion_exp, text)
+      blend_inpain, blend, mask_lesion_exp, mask_lesion_eroded, mask_inpaint = blend_texture_and_synthetic_nodule(lesion_exp, text, nodule)
       ndls_generated.append(blend_inpain)
       gens.append(GEN)
     return ndls_generated, gens
